@@ -1,0 +1,162 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{algpseudocode}
+\usepackage{mathtools}
+
+\usepackage{mathrsfs}
+\title{tarea}
+\usepackage{hyperref} %<--- Load after everything else
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{dsfont}
+\usepackage{epsfig}
+\usepackage{upgreek}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{url}
+\usepackage{setspace}
+\author{jeisoneduardoep }
+\date{April 2020}
+
+\usepackage[superscript,biblabel]{cite}
+\usepackage{lipsum}
+
+\begin{document}
+
+\maketitle
+
+\section*{Teorema Maestro}
+\hline 
+En el análisis de algoritmos, el \textbf{teorema maestro} proporciona una solución sencilla en términos asintóticos (usando una Cota superior asintótica) para ecuaciones de recurrencia que ocurren en muchos algoritmos recursivos tales como en el Algoritmo divide y vencerás. Fue popularizado por el libro \textit{Introducción a los algoritmos} por Cormen, Leiserson, Rivest, y Stein, en el cual fue tanto introducido como probado formalmente. No todas las ecuaciones de recurrencia pueden ser resueltas con el uso del teorema maestro.
+
+\tableofcontents
+\section{Introducción}
+\hline
+Considere un problema que puede ser resuelto a través de un algoritmo recursivo como el siguiente:
+
+\begin{algorithmic}
+\State{\textbf{procedimiento} T( n : tamaño del problema ) \textbf{definición:}}
+\If{ $n < 1$ } exit\\\
+     \State{Hacer trabajo f(n)}\\\
+     \State{T(n/b)}
+     \State{T(n/b)}
+     \State{ ...repetir una cantidad de  a veces...}
+     \state{T(n/b)}\\
+\end{algorithmic}
+\textbf{fin procedimiento}\\
+
+
+ En el algoritmo mostrado arriba se divide el problema original en una cantidad menor de subproblemas de manera recursiva, cada uno de estos subproblemas siendo del tamaño de n/b. Esto podría ser visualizado como la construcción de un árbol de llamadas al problema, siendo cada nodo del árbol una instancia recursiva del mismo y sus hijos siendo instancias de las llamadas subsiguientes. En el ejemplo de arriba, cada nodo tendría un número a de hijos. Cada nodo hará la cantidad de trabajo correspondiente al tamaño del subproblema n, pasado a esa instancia en particular, estando la cantidad de trabajo realizado determinado por  $f(n)$. El trabajo total realizado por todas las llamadas del árbol es la suma de los trabajos hechos por cada uno de los nodos del árbol.
+$55$
+Algoritmos como el descrito arriba pueden ser representados por una relación de recurrencia como la siguiente: $ T(n)=a\;T\left({\frac {n}{b}}\right)+f(n)$. Esta relación de recurrencia puede ser sucesivamente sustituida en sí misma y expandida hasta obtener una expresión que represente la cantidad total de trabajo.\cite{duke}
+
+El teorema maestro nos permite fácilmente calcular el tiempo de ejecución de este tipo de algoritmos recursivos en notación de Cota superior asintótica, sin la necesidad de hacer la expansión de las distintas llamadas recursivas.
+\section{Forma genérica}
+El teorema maestro sirve para resolver relaciones recursivas de la siguiente forma:
+\begin{equation}
+    T(n)=aT\left({\frac {n}{b}}\right)+f(n) \textbf{ donde } a\geq 1,>1
+\end{equation}
+ 
+En la aplicación de análisis de algoritmos recursivos, las constantes y funciones toman los siguientes significados:
+\begin{itemize}
+    \item n es el tamaño del problema a resolver.
+    \item a es el número de subproblemas en la recursión.
+    \item n/b el tamaño de cada subproblema. (Aquí se asume que todos los subproblemas tienen el mismo tamaño)
+    \item f(n) es el costo del trabajo hecho fuera de las llamadas recursivas, que incluye el costo de la división del problema y el costo de unir las soluciones de los subproblemas.
+\end{itemize}
+Luego, es posible realizar una cota en notación Big O en los siguientes tres casos:
+
+
+\subsection{Caso 1}
+
+        \subsubsection{Forma Genérica}
+        Si $f(n)=O\left(n^{c}\right)$ donde  $c<\log _{b}a$ (usando Cota superior asintótica)\\
+        entonces:\\
+        $T(n)=\Theta \left(n^{\log _{b}a}\right)$
+
+        \subsubsection{Ejemplo}
+        $T(n)=8T\left({\frac {n}{2}}\right)+1000n^{2}$\\
+        Como puede verse en la fórmula de arriba:\\
+
+        $a=8,b=2,f(n)=1000n^{2}$, entonces\\
+        $f(n)=O\left(n^{c}\right)$, donde  c=2\\
+        Luego, vemos que se cumple la condición del caso 1:\\
+
+        $\log _{b}a=\log _{2}8=3>c.$\\
+        Luego por el teorema maestro tenemos que\\
+
+        $T(n)= \Theta \left(n^{\log _{b}a}\right)=\Theta \left(n^{3}\right)$
+ 
+        \subsection{Caso 2}
+        \subsubsection{Forma Genérica}
+        Si es verdad que para alguna constante $k \geq  0$, que:
+        $f(n)=\Theta \left(n^{c}\log ^{k}n\right)$ donde  $c=\log _{b}a$\\
+        Entonces:
+        $T(n)=\Theta \left(n^{c}\log ^{k+1}n\right)$
+        
+        \subsubsection{Ejemplo}
+        $T(n)=2T\left({\frac {n}{2}}\right)+10n$
+
+        Como podemos ver en la fórmula de arriba, las variables tienen los siguientes valores:\\
+        $a=2\\ b=2\\ c=1$\\ 
+        $f(n)=10n$\\
+        $f(n)=\Theta \left(n^{c}\log ^{k}n\right)$
+        donde  $c=1,k=0\\$
+        Luego, nos fijamos que cumpla la condición del caso 2:\\
+        
+         $\log _{b}a=\log _{2}2=1,luego, se cumple que  c=\log _{b}a$\\
+        Entonces por el segundo caso del teorema maestro:\\
+        
+         $T(n)=\Theta \left(n^{\log _{b}a}\log ^{k+1}n\right)=\Theta \left(n^{1}\log ^{1}n\right)=\Theta \left(n\log n\right)$\\
+        Dando de esa manera que la relación de recurrencia de $T(n)$ es $\Theta(n log n).$\\
+        
+        \subsection{Caso 3}
+        \subsubsection{Forma Genérica}
+        Si es verdad que:\\
+        $f(n)=\Omega \left(n^{c}\right)$ donde $c>\log _{b}a$\\
+        Y si es verdad además que:\\
+        $af\left({\frac {n}{b}}\right)\leq kf(n)$ para alguna constante  $k<1$ y suficientemente grande $n$ \\
+        Entonces:\\
+        $T\left(n\right)=\Theta \left(f(n)\right)$
+        \subsubsection{Ejemplo}
+        $T(n)=2T\left({\frac {n}{2}}\right)+n^{2}$\\
+        Como puede verse en la fórmula de arriba, las variables obtienen los siguientes valores:
+
+$ a=2,\ b=2,\ f(n)=n^{2}$\\
+$f(n)=\Omega \left(n^{c}\right)$, donde $ c=2$\\
+Luego se comprueba que satisface la condición del caso 3:\\
+
+$\log _{b}a=\log _{2}2=1$ ,y por lo tanto se cumple que, $c>\log _{b}a$\\
+La condición también se cumple:
+
+$2({\frac {n^{2}}{4}})\leq kn^{2}$, eligiendo $k=1/2$\\
+Entonces por el tercer caso del teorema maestro:
+
+$T\left(n\right)=\Theta \left(f(n)\right)=\Theta \left(n^{2}\right).$\\
+Por consiguiente la relación de recurrencia T(n) es in $\Theta (n2).$
+    \section{Casos Irregulares}
+    Los siguientes casos no pueden ser resueltos a través de la utilización del teorema maestro:\cite{massacusets}
+    \begin{itemize}
+        \item $T(n)=2^{n}T\left({\frac {n}{2}}\right)+n^{n}$\\
+        a no es una constante; el número de subproblemas debe ser fijo.
+        \item $ T(n)=2T\left({\frac {n}{2}}\right)+{\frac {n}{\log n}}$\\
+        f(n) debe ser polinomial.
+        \item $T(n)=0.5T\left({\frac {n}{2}}\right)+n$ \\
+        a<1 no puede darse el caso de que haya menos de un subproblema.
+        \item $T(n)=64T\left({\frac {n}{8}}\right)-n^{2}\log n$\\
+        f(n) que es el tiempo de trabajo, no puede ser negativo.
+        \item $ T(n)=T\left({\frac {n}{2}}\right)+n(2-\cos n)$\\
+        Caso 3 pero hay una violación de regularidad.
+    \end{itemize}
+  
+    \section{Bibliografía}
+\begin{itemize}
+    \item Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. \textit{Introduction to Algorithms, Second Edition. MIT Press and McGraw-Hill,} 2001. ISBN 0-262-03293-7. Sections 4.3 (The master method) and 4.4 (Proof of the master theorem), pp. 73–90.
+    \item Michael T. Goodrich and Roberto Tamassia. \textit{ Algorithm Design: Foundation, Analysis, and Internet Examples. Wiley}, 2002. ISBN 0-471-38365-1. The master theorem (including the version of Case 2 included here, which is stronger than the one from CLRS) is on pp. 268-270.
+  \end{itemize}
+  
+    \bibliographystyle{unsrt}
+    
+    \bibliography{referencias}
+\end{document}
